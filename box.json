@@ -22,10 +22,12 @@
     },
     "installPaths":{
         "coldbox":"coldbox",
-        "testbox":"testbox"
+        "testbox":"testbox",
+        "cfconcurrent":"cfconcurrent/"
     },
     "dependencies":{
-        "coldbox":"^5.0.0"
+        "coldbox":"^5.0.0",
+        "cfconcurrent":"^2.0.5"
     },
     "scripts":{}
 }

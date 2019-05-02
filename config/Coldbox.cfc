@@ -106,11 +106,12 @@
 
 		//Interceptor Settings
 		interceptorSettings = {
-			customInterceptionPoints = ""
+			customInterceptionPoints = "onRabbitMQMessageReceived,onRabbitMQMessageSent"
 		};
 
 		//Register interceptors as an array, we need order
 		interceptors = [
+			{class="interceptors.RabbitMQInterceptor", 	properties={}	}
 		];
 
 		/*
@@ -157,6 +158,7 @@
 	*/
 	function development(){
 		coldbox.customErrorTemplate = "/coldbox/system/includes/BugReport.cfm";
+		settings.RabbitMQ.Vhost = "cfdemo-dev";
 	}
 
 }

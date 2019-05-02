@@ -2,6 +2,7 @@
 
 	property name = "logger" 		inject = "logBox:logger:{this}";
 	property name = "RabbitMQ" 	inject = "coldbox:setting:RabbitMQ"; 
+	property name= "myScheduler" inject = "CfConcurrentScheduler";
 
 	// Default Action
 	function index(event,rc,prc){
@@ -28,9 +29,34 @@
 			//this is all we need for a rabbitMQ connection
 			application.RabbitMQConnection = rabbitMQFactory.newConnection();
 			logger.info("rabbitmq connection created");
+
+			//we also have to declare a consumer
+			// we use polling, and we schedule it with cfconcurrent
+			myScheduler.setLoggingEnabled(true);
+			myScheduler.start();
+			//scheduler added, now add a recurring task every 2 seconds
+			myScheduler.scheduleWithFixedDelay(
+				"RabbitMQPollingConsumerTask",
+				getInstance("RabbitMQPollingConsumer"),
+				0, 2,	myScheduler.getObjectFactory().SECONDS
+			)
+			logger.info("RabbitMQ pull scheduler activated")
+
+			// rabbit pull met createDynamicProxy still has to be tested
+//			application.Channel = application.RabbitMQConnection.createChannel();
+//			application.channel.queueDeclare(RabbitMQ.EventsQueue, javaCast( "boolean", true ), javaCast( "boolean", false ), javaCast( "boolean", false ), javaCast( "null", "" ));
+			// bind queue to exchange
+//			application.channel.queueBind(RabbitMQ.EventsQueue, RabbitMQ.Exchange, RabbitMQ.BindKey);
+			//consumer = new models.RabbitConsumer(application.channel);
+//			consumerTask = createDynamicProxy(new models.RabbitConsumer(application.channel),[ "com.rabbitmq.client.Consumer" ]);	
+			// Consume Stream API
+//			consumerTag = application.channel.basicConsume( "cfdemo-responses", javaCast( "boolean", false ), consumerTask );
 		}
 	}
-
+	private function createByteArray(string){
+		var objString = createObject("Java", "java.lang.String").init(JavaCast("string", string));
+		return objString.getBytes();
+	}
 	function onRequestStart(event,rc,prc){
 
 	}

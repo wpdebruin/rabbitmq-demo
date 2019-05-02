@@ -45,6 +45,9 @@
 		map("RabbitMQFactory").toJava("com.rabbitmq.client.ConnectionFactory").asSingleton();
 		map("RabbitMQPropertiesBuilder").toJava("com.rabbitmq.client.AMQP$BasicProperties$Builder").asSingleton();
 		
+		// map cfconcurrent scheduler
+		map('CfConcurrentScheduler').to("cfconcurrent.ScheduledThreadPoolExecutor").asSingleton().initWith(serviceName = "CfConcurrentScheduler", maxConcurrent = 0);
+
 	}	
 
 }
